@@ -1,0 +1,28 @@
+{
+  "name": "produce-version",
+  "version": "1.0.0",
+  "description": "Execute base commands to create a release",
+  "main": "dist/index.js",
+  "scripts": {
+    "dist": "npm run build && copyfiles package.json bin/** README.md dist/",
+    "build": "node node_modules/typescript/bin/tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/minimist": "^1.2.0",
+    "@types/node": "^10.9.4",
+    "@types/semver": "^5.5.0",
+    "typescript": "^3.0.3"
+  },
+  "dependencies": {
+    "conventional-changelog": "^2.0.3",
+    "copyfiles": "^2.0.0",
+    "minimist": "^1.2.0",
+    "semver": "^5.5.1"
+  },
+  "bin": {
+    "produce-version": "./bin/produce-version"
+  }
+}
