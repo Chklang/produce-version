@@ -7,6 +7,7 @@ import * as minimist from "minimist";
 
 const args = minimist.default(process.argv);
 const nextVersion = args['tagversion'];
+const gitExecution: boolean = args['git-publish'] !== "false"
 if (!semVer.valid(nextVersion)) {
     throw new Error('Version ' + nextVersion + ' isn\'t a valid semver!');
 }
@@ -27,8 +28,10 @@ Promise.resolve().then(() => {
         });
     });
 }).then(() => {
-    child_process.execSync('git add package.json CHANGELOG.md');
-    child_process.execSync('git commit -m "Produce version ' + nextVersion + '"');
-    child_process.execSync('git tag "v' + nextVersion + '"');
-    child_process.execSync('git push');
+    if (gitExecution) {
+        child_process.execSync('git add package.json CHANGELOG.md');
+        child_process.execSync('git commit -m "Produce version ' + nextVersion + '"');
+        child_process.execSync('git tag "v' + nextVersion + '"');
+        child_process.execSync('git push');
+    }
 });
