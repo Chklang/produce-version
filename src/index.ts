@@ -11,10 +11,12 @@ const gitExecution: boolean = args['git-publish'] !== "false"
 if (!semVer.valid(nextVersion)) {
     throw new Error('Version ' + nextVersion + ' isn\'t a valid semver!');
 }
+const versionObject = semVer.coerce(nextVersion);
+
 Promise.resolve().then(() => {
     const packageJsonContent = JSON.parse(fs.readFileSync('package.json').toString());
-    if (packageJsonContent.version !== nextVersion) {
-        packageJsonContent.version = nextVersion;
+    if (packageJsonContent.version !== versionObject.version) {
+        packageJsonContent.version = versionObject.version;
         fs.writeFileSync('package.json', JSON.stringify(packageJsonContent, null, 2));
     }
 }).then(() => {
@@ -30,8 +32,8 @@ Promise.resolve().then(() => {
 }).then(() => {
     if (gitExecution) {
         child_process.execSync('git add package.json CHANGELOG.md');
-        child_process.execSync('git commit -m "Produce version ' + nextVersion + '"');
-        child_process.execSync('git tag "v' + nextVersion + '"');
+        child_process.execSync('git commit -m "Produce version ' + versionObject.version + '"');
+        child_process.execSync('git tag "v' + versionObject.version + '"');
         child_process.execSync('git push');
     }
 });
